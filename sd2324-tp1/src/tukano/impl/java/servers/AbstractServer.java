@@ -1,6 +1,7 @@
 package tukano.impl.java.servers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 import utils.Args;
