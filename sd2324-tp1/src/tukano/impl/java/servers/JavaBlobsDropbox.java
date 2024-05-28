@@ -4,6 +4,7 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import com.google.gson.Gson;
 import tukano.impl.java.servers.dropbox.msgs.CreateFolderV2Args;
+import tukano.impl.java.servers.dropbox.msgs.DeleteArgs;
 import tukano.impl.java.servers.dropbox.msgs.DownloadArgs;
 import tukano.impl.java.servers.dropbox.msgs.UploadArgs;
 import org.pac4j.scribe.builder.api.DropboxApi20;
@@ -17,8 +18,13 @@ import tukano.impl.java.clients.Clients;
 import utils.Hash;
 import utils.Hex;
 import utils.IO;
+import utils.Token;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.logging.Logger;
 
 import static java.lang.String.format;
@@ -115,12 +121,64 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
 
     @Override
     public Result<Void> delete(String blobId, String token) {
-        return null;
+        Log.info(() -> format("delete : blobId = %s, token=%s\n", blobId, token));
+
+        if( ! Token.matches( token ) )
+            return error(FORBIDDEN);
+
+
+        var file = toFilePath(blobId);
+
+        if (file == null)
+            return error(BAD_REQUEST);
+        try {
+            String directoryName = file.getAbsolutePath();
+            var delete = new OAuthRequest(Verb.POST, DELETE_URL);
+
+            delete.addHeader(CONTENT_TYPE_HDR, JSON_CONTENT_TYPE);
+
+            delete.setPayload(json.toJson(new DeleteArgs(directoryName)));
+
+            service.signRequest(accessToken, delete);
+            // send the request to the service
+            Response r = service.execute(delete);
+            // error processing
+            if (r.getCode() != HTTP_SUCCESS)
+                throw new RuntimeException(String.format("Failed to download file: %s, Status: %d, \nReason: %s\n",
+                        directoryName, r.getCode(), r.getBody()));
+            return ok();
+        } catch (Exception e) {
+            return error(INTERNAL_ERROR);
+        }
     }
 
     @Override
     public Result<Void> deleteAllBlobs(String userId, String token) {
-        return null;
+        Log.info(() -> format("deleteAllBlobs : userId = %s, token=%s\n", userId, token));
+
+        if( ! Token.matches( token ) )
+            return error(FORBIDDEN);
+
+        try {
+            var directoryName = new File(BLOBS_ROOT_DIR + userId );
+            var delete = new OAuthRequest(Verb.POST, DELETE_URL);
+
+            delete.addHeader(CONTENT_TYPE_HDR, JSON_CONTENT_TYPE);
+
+            delete.setPayload(json.toJson(new DeleteArgs(directoryName.getAbsolutePath())));
+
+            service.signRequest(accessToken, delete);
+            // send the request to the service
+            Response r = service.execute(delete);
+            // error processing
+            if (r.getCode() != HTTP_SUCCESS)
+                throw new RuntimeException(String.format("Failed to download file: %s, Status: %d, \nReason: %s\n",
+                        directoryName, r.getCode(), r.getBody()));
+
+            return ok();
+        } catch (Exception e) {
+            return error(INTERNAL_ERROR);
+        }
     }
 
     private boolean validBlobId(String blobId) {
