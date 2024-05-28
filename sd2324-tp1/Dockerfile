@@ -71,3 +71,14 @@ COPY target/*jar-with-dependencies.jar sd2324.jar
 # keytool -importcert -file blobs1-ourorg.cert -alias blobs1-ourorg -keystore client-ts.jks
 # keytool -importcert -file blobs2-ourorg.cert -alias blobs2-ourorg -keystore client-ts.jks
 # keytool -importcert -file blobs3-ourorg.cert -alias blobs3-ourorg -keystore client-ts.jks
+
+############################################################# DROPBOX ################################################################################
+
+# APP KEY
+# cwendmo115gd0t1
+
+# APP SECRET
+# 3m4ddrj3nci3uv9
+
+# ACCESS TOKEN
+# sl.B2HcR_fzZyzo4AzPv-5WUWKgj0F84IGaebQvFchUhAGgBdsaEPmUd4qUi1mpZP813RApodvnwwZRJcgG2ynd7GIqfcLniz12eqb32oDdm0JNS_Xqy8Ca0AZOYwKDnUgR6Q2M-AkMqQqn
