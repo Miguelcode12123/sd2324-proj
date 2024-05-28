@@ -27,47 +27,47 @@ COPY target/*jar-with-dependencies.jar sd2324.jar
 # PASSWORD - SD1234
 
 # USERS
-# keytool -ext SAN=dns:users0-ourorg0 -genkey -alias users0-ourorg0 -keyalg RSA -validity 365 -keystore users0-ourorg -storetype pkcs12
+# keytool -ext SAN=dns:users0-ourorg -genkey -alias users0-ourorg -keyalg RSA -validity 365 -keystore users0-ourorg.jks -storetype pkcs12
 
 # SHORTS
-# keytool -ext SAN=dns:shorts0-ourorg0 -genkey -alias shorts0-ourorg0 -keyalg RSA -validity 365 -keystore shorts0-ourorg -storetype pkcs12
-# keytool -ext SAN=dns:shorts1-ourorg0 -genkey -alias shorts1-ourorg0 -keyalg RSA -validity 365 -keystore shorts1-ourorg -storetype pkcs12
-# keytool -ext SAN=dns:shorts2-ourorg0 -genkey -alias shorts2-ourorg0 -keyalg RSA -validity 365 -keystore shorts2-ourorg -storetype pkcs12
+# keytool -ext SAN=dns:shorts0-ourorg -genkey -alias shorts0-ourorg -keyalg RSA -validity 365 -keystore shorts0-ourorg.jks -storetype pkcs12
+# keytool -ext SAN=dns:shorts1-ourorg -genkey -alias shorts1-ourorg -keyalg RSA -validity 365 -keystore shorts1-ourorg.jks -storetype pkcs12
+# keytool -ext SAN=dns:shorts2-ourorg -genkey -alias shorts2-ourorg -keyalg RSA -validity 365 -keystore shorts2-ourorg.jks -storetype pkcs12
 
 # BLOBS
-# keytool -ext SAN=dns:blobs0-ourorg0 -genkey -alias blobs0-ourorg0 -keyalg RSA -validity 365 -keystore blobs0-ourorg -storetype pkcs12
-# keytool -ext SAN=dns:blobs1-ourorg0 -genkey -alias blobs1-ourorg0 -keyalg RSA -validity 365 -keystore blobs1-ourorg -storetype pkcs12
-# keytool -ext SAN=dns:blobs2-ourorg0 -genkey -alias blobs2-ourorg0 -keyalg RSA -validity 365 -keystore blobs2-ourorg -storetype pkcs12
-# keytool -ext SAN=dns:blobs3-ourorg0 -genkey -alias blobs3-ourorg0 -keyalg RSA -validity 365 -keystore blobs3-ourorg -storetype pkcs12
+# keytool -ext SAN=dns:blobs0-ourorg -genkey -alias blobs0-ourorg -keyalg RSA -validity 365 -keystore blobs0-ourorg.jks -storetype pkcs12
+# keytool -ext SAN=dns:blobs1-ourorg -genkey -alias blobs1-ourorg -keyalg RSA -validity 365 -keystore blobs1-ourorg.jks -storetype pkcs12
+# keytool -ext SAN=dns:blobs2-ourorg -genkey -alias blobs2-ourorg -keyalg RSA -validity 365 -keystore blobs2-ourorg.jks -storetype pkcs12
+# keytool -ext SAN=dns:blobs3-ourorg -genkey -alias blobs3-ourorg -keyalg RSA -validity 365 -keystore blobs3-ourorg.jks -storetype pkcs12
 
 # Self-signed Server Certificate
 
 # USERS
-# keytool -exportcert -alias users0-ourorg0 -keystore users0-ourorg -file users0-ourorg-cert
+# keytool -exportcert -alias users0-ourorg -keystore users0-ourorg.jks -file users0-ourorg.cert
 
 # SHORTS
-# keytool -exportcert -alias shorts0-ourorg0 -keystore shorts0-ourorg -file shorts0-ourorg-cert
-# keytool -exportcert -alias shorts1-ourorg0 -keystore shorts1-ourorg -file shorts1-ourorg-cert
-# keytool -exportcert -alias shorts2-ourorg0 -keystore shorts2-ourorg -file shorts2-ourorg-cert
+# keytool -exportcert -alias shorts0-ourorg -keystore shorts0-ourorg.jks -file shorts0-ourorg.cert
+# keytool -exportcert -alias shorts1-ourorg -keystore shorts1-ourorg.jks -file shorts1-ourorg.cert
+# keytool -exportcert -alias shorts2-ourorg -keystore shorts2-ourorg.jks -file shorts2-ourorg.cert
 
 # BLOBS
-# keytool -exportcert -alias blobs0-ourorg0 -keystore blobs0-ourorg -file blobs0-ourorg-cert
-# keytool -exportcert -alias blobs1-ourorg0 -keystore blobs1-ourorg -file blobs1-ourorg-cert
-# keytool -exportcert -alias blobs2-ourorg0 -keystore blobs2-ourorg -file blobs2-ourorg-cert
-# keytool -exportcert -alias blobs3-ourorg0 -keystore blobs3-ourorg -file blobs3-ourorg-cert
+# keytool -exportcert -alias blobs0-ourorg -keystore blobs0-ourorg.jks -file blobs0-ourorg.cert
+# keytool -exportcert -alias blobs1-ourorg -keystore blobs1-ourorg.jks -file blobs1-ourorg.cert
+# keytool -exportcert -alias blobs2-ourorg -keystore blobs2-ourorg.jks -file blobs2-ourorg.cert
+# keytool -exportcert -alias blobs3-ourorg -keystore blobs3-ourorg.jks -file blobs3-ourorg.cert
 
 # Truststore
 
 # USERS
-# keytool -importcert -file users0-ourorg.cert -alias users0-ourorg0 -keystore client-ts.jks
+# keytool -importcert -file users0-ourorg.cert -alias users0-ourorg -keystore client-ts.jks
 
 # SHORTS
-# keytool -importcert -file shorts0-ourorg.cert -alias shorts0-ourorg0 -keystore client-ts.jks
-# keytool -importcert -file shorts1-ourorg.cert -alias shorts1-ourorg0 -keystore client-ts.jks
-# keytool -importcert -file shorts2-ourorg.cert -alias shorts2-ourorg0 -keystore client-ts.jks
+# keytool -importcert -file shorts0-ourorg.cert -alias shorts0-ourorg -keystore client-ts.jks
+# keytool -importcert -file shorts1-ourorg.cert -alias shorts1-ourorg -keystore client-ts.jks
+# keytool -importcert -file shorts2-ourorg.cert -alias shorts2-ourorg -keystore client-ts.jks
 
 #BLOBS
-# keytool -importcert -file blobs0-ourorg.cert -alias blobs0-ourorg0 -keystore client-ts.jks
-# keytool -importcert -file blobs1-ourorg.cert -alias blobs1-ourorg0 -keystore client-ts.jks
-# keytool -importcert -file blobs2-ourorg.cert -alias blobs2-ourorg0 -keystore client-ts.jks
-# keytool -importcert -file blobs3-ourorg.cert -alias blobs3-ourorg0 -keystore client-ts.jks
+# keytool -importcert -file blobs0-ourorg.cert -alias blobs0-ourorg -keystore client-ts.jks
+# keytool -importcert -file blobs1-ourorg.cert -alias blobs1-ourorg -keystore client-ts.jks
+# keytool -importcert -file blobs2-ourorg.cert -alias blobs2-ourorg -keystore client-ts.jks
+# keytool -importcert -file blobs3-ourorg.cert -alias blobs3-ourorg -keystore client-ts.jks
