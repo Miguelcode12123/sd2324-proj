@@ -6,6 +6,8 @@ WORKDIR /home/sd
 ADD hibernate.cfg.xml .
 ADD shorts.props .
 
+# COPY tls/*.jks /home/sd/
+
 COPY tls/*.jks /home/sd/
 
 # copy the jar created by assembly to the docker image
@@ -18,6 +20,8 @@ COPY target/*jar-with-dependencies.jar sd2324.jar
 # docker pull smduarte/sd2324-kafka
 
 # mvn clean compile assembly:single docker:build
+
+# docker build -t sd2324-tp2-xxxxx-yyyyy:latest .
 
 ############################################################# TESTER ################################################################################
 # sh test-sd-tp2.sh -image sd2324-tp2-xxxxx-yyyyy

@@ -1,4 +1,4 @@
-package tukano.impl.rest.servers;
+package tukano.impl.java.servers.rest.servers;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -20,7 +20,7 @@ public class RestResource {
 	/**
 	 * Translates a Result<T> to a HTTP Status code
 	 */
-	private static Status statusCodeFrom(Result<?> result) {
+	protected static Status statusCodeFrom(Result<?> result) {
 		return switch (result.error()) {
 			case CONFLICT -> Status.CONFLICT;
 			case NOT_FOUND -> Status.NOT_FOUND;
@@ -32,5 +32,5 @@ public class RestResource {
 			default -> Status.INTERNAL_SERVER_ERROR;
 		};
 	}
-	
+
 }

@@ -1,5 +1,4 @@
-package tukano.impl.rest.clients;
-
+package tukano.impl.java.servers.rest.clients;
 
 import static tukano.api.java.Result.error;
 import static tukano.api.java.Result.ok;
@@ -37,8 +36,8 @@ public class RestClient {
 	final ClientConfig config;
 
 	final WebTarget target;
-	
-	protected RestClient(String serverURI, String servicePath ) {
+
+	protected RestClient(String serverURI, String servicePath) {
 		this.serverURI = serverURI;
 		this.config = new ClientConfig();
 
@@ -46,7 +45,7 @@ public class RestClient {
 		config.property(ClientProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
 
 		this.client = ClientBuilder.newClient(config);
-		this.target = client.target( serverURI ).path( servicePath );
+		this.target = client.target(serverURI).path(servicePath);
 	}
 
 	protected <T> Result<T> reTry(Supplier<Result<T>> func) {
@@ -69,10 +68,9 @@ public class RestClient {
 			var status = r.getStatusInfo().toEnum();
 			if (status == Status.OK && r.hasEntity()) {
 				return ok(null);
-			}
-			else 
-				if( status == Status.NO_CONTENT) return ok();
-			
+			} else if (status == Status.NO_CONTENT)
+				return ok();
+
 			return error(getErrorCodeFrom(status.getStatusCode()));
 		} finally {
 			r.close();
@@ -84,39 +82,39 @@ public class RestClient {
 			var status = r.getStatusInfo().toEnum();
 			if (status == Status.OK && r.hasEntity())
 				return ok(r.readEntity(entityType));
-			else 
-				if( status == Status.NO_CONTENT) return ok();
-			
+			else if (status == Status.NO_CONTENT)
+				return ok();
+
 			return error(getErrorCodeFrom(status.getStatusCode()));
 		} finally {
 			r.close();
 		}
 	}
-	
+
 	protected <T> Result<T> toJavaResult(Response r, GenericType<T> entityType) {
 		try {
 			var status = r.getStatusInfo().toEnum();
 			if (status == Status.OK && r.hasEntity())
 				return ok(r.readEntity(entityType));
-			else 
-				if( status == Status.NO_CONTENT) return ok();
-			
+			else if (status == Status.NO_CONTENT)
+				return ok();
+
 			return error(getErrorCodeFrom(status.getStatusCode()));
 		} finally {
 			r.close();
 		}
 	}
-	
+
 	public static ErrorCode getErrorCodeFrom(int status) {
 		return switch (status) {
-		case 200, 204 -> ErrorCode.OK;
-		case 409 -> ErrorCode.CONFLICT;
-		case 403 -> ErrorCode.FORBIDDEN;
-		case 404 -> ErrorCode.NOT_FOUND;
-		case 400 -> ErrorCode.BAD_REQUEST;
-		case 500 -> ErrorCode.INTERNAL_ERROR;
-		case 501 -> ErrorCode.NOT_IMPLEMENTED;
-		default -> ErrorCode.INTERNAL_ERROR;
+			case 200, 204 -> ErrorCode.OK;
+			case 409 -> ErrorCode.CONFLICT;
+			case 403 -> ErrorCode.FORBIDDEN;
+			case 404 -> ErrorCode.NOT_FOUND;
+			case 400 -> ErrorCode.BAD_REQUEST;
+			case 500 -> ErrorCode.INTERNAL_ERROR;
+			case 501 -> ErrorCode.NOT_IMPLEMENTED;
+			default -> ErrorCode.INTERNAL_ERROR;
 		};
 	}
 

@@ -1,5 +1,4 @@
-package tukano.impl.rest.servers.utils;
-
+package tukano.impl.java.servers.rest.servers.utils;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -20,6 +19,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 
 		ex.printStackTrace();
 
-		return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).type(MediaType.APPLICATION_JSON).build();
+		return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).type(MediaType.APPLICATION_JSON)
+				.build();
 	}
 }

@@ -52,6 +52,7 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
     private final OAuth2AccessToken accessToken;
 
     private static Logger Log = Logger.getLogger(JavaBlobsDropbox.class.getName());
+
     public JavaBlobsDropbox() {
         json = new Gson();
         accessToken = new OAuth2AccessToken(accessTokenStr);
@@ -73,7 +74,8 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
             String directoryName = file.getAbsolutePath();
             var upload = new OAuthRequest(Verb.POST, UPLOAD_URL);
 
-            upload.addHeader(DROPBOX_API_ARG, json.toJson(new UploadArgs(directoryName, "overwrite", false, false, false)));
+            upload.addHeader(DROPBOX_API_ARG,
+                    json.toJson(new UploadArgs(directoryName, "overwrite", false, false, false)));
             upload.addHeader(CONTENT_TYPE_HDR, OCTET_CONTENT_TYPE);
             upload.setPayload(bytes);
 
@@ -118,14 +120,12 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
 
     }
 
-
     @Override
     public Result<Void> delete(String blobId, String token) {
         Log.info(() -> format("delete : blobId = %s, token=%s\n", blobId, token));
 
-        if( ! Token.matches( token ) )
+        if (!Token.matches(token))
             return error(FORBIDDEN);
-
 
         var file = toFilePath(blobId);
 
@@ -156,11 +156,11 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
     public Result<Void> deleteAllBlobs(String userId, String token) {
         Log.info(() -> format("deleteAllBlobs : userId = %s, token=%s\n", userId, token));
 
-        if( ! Token.matches( token ) )
+        if (!Token.matches(token))
             return error(FORBIDDEN);
 
         try {
-            var directoryName = new File(BLOBS_ROOT_DIR + userId );
+            var directoryName = new File(BLOBS_ROOT_DIR + userId);
             var delete = new OAuthRequest(Verb.POST, DELETE_URL);
 
             delete.addHeader(CONTENT_TYPE_HDR, JSON_CONTENT_TYPE);
@@ -193,21 +193,24 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
         var res = new File(BLOBS_ROOT_DIR + parts[0] + "/" + parts[1]);
         try {
             createDirectory(res.getParentFile().getAbsolutePath());
-
-            return res;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create directory");
+            e.printStackTrace();
         }
+
+        return res;
+
     }
 
-    private void createDirectory (String directoryName) throws Exception {
+    private void createDirectory(String directoryName) throws Exception {
         // create a request object
         var createFolder = new OAuthRequest(Verb.POST, CREATE_FOLDER_V2_URL);
         // add header
         createFolder.addHeader(CONTENT_TYPE_HDR, JSON_CONTENT_TYPE);
-        // the body of the request, corresponds to the "parameters" in the tukano.impl.java.servers.dropbox api
+        // the body of the request, corresponds to the "parameters" in the
+        // tukano.impl.java.servers.dropbox api
         createFolder.setPayload(json.toJson(new CreateFolderV2Args(directoryName, false)));
-        // authenticate the request, i.e. use our private key, in order for the tukano.impl.java.servers.dropbox
+        // authenticate the request, i.e. use our private key, in order for the
+        // tukano.impl.java.servers.dropbox
         // api to know who we are. Corresponds to the header parameter "Authorization",
         // in the tukano.impl.java.servers.dropbox api
         service.signRequest(accessToken, createFolder);
