@@ -36,7 +36,7 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
 
     private static final String apiKey = "cwendmo115gd0t1";
     private static final String apiSecret = "3m4ddrj3nci3uv9";
-    private static final String accessTokenStr = "sl.B2EayIP8AWWC02POf7H4mcuLeNMDaJTahUoFPNPEZD6508wEKcHvLDKL5lsJ1xy--lYxBeXZW-Ag-rpxuQ5lfd3MmYJuq5AzU_4GLlGmzPf2E2yGtGNnvBYlDVNMu5kt5rP_nE2w0bZz";
+    private static final String accessTokenStr = "sl.B2F37i8kWhcf3pz8ma5LWwPGY9r9in2l--B_9mRwNL7pPYQbs5HrcYYOOZYywavNERsQVg5aYPnazvgKfK2wOzdIVvtwId74-penNeM82PlAQeXKDCFliDd5co_P3ZknKv7xXTrRsP96";
     private static final String UPLOAD_URL = "https://content.dropboxapi.com/2/files/upload";
     private static final String DOWNLOAD_URL = "https://content.dropboxapi.com/2/files/download";
     private static final String DELETE_URL = "https://api.dropboxapi.com/2/files/delete_v2";
@@ -126,7 +126,6 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
         if( ! Token.matches( token ) )
             return error(FORBIDDEN);
 
-
         var file = toFilePath(blobId);
 
         if (file == null)
@@ -196,7 +195,7 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
 
             return res;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create directory");
+            throw new RuntimeException(e);
         }
     }
 

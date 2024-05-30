@@ -267,8 +267,6 @@ public class JavaShorts implements ExtendedShorts {
 			});
 		});
 	}
-
-
 	
 	private String getLeastLoadedBlobServerURI() {
 		try {
