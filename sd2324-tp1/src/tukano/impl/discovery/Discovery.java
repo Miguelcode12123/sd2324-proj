@@ -11,8 +11,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import utils.Sleep;
 
 /**
@@ -65,7 +69,7 @@ class DiscoveryImpl implements Discovery {
 
 	private static Discovery singleton;
 
-	private Map<String, Set<URI>> uris = new ConcurrentHashMap<>();
+	private Map<String, LoadingCache<URI, URI>> uris = new ConcurrentHashMap<>();
 	
 	synchronized static Discovery getInstance() {
 		if (singleton == null) {
@@ -106,9 +110,18 @@ class DiscoveryImpl implements Discovery {
 	@Override
 	public URI[] knownUrisOf(String serviceName, int minEntries) {
 		while(true) {
-			var res = uris.getOrDefault(serviceName, Collections.emptySet());
+			var res = uris.getOrDefault(serviceName, CacheBuilder.newBuilder()
+					.expireAfterWrite(DISCOVERY_ANNOUNCE_PERIOD * 2, TimeUnit.MILLISECONDS)
+					.build(new CacheLoader<URI, URI>() {
+						@Override
+						public URI load(URI key) throws Exception {
+							return key;
+				}
+					}
+			));
+
 			if( res.size() >= minEntries )
-				return res.toArray( new URI[res.size()]);
+				return res.asMap().keySet().toArray(new URI[(int) res.size()]);
 			else
 				Sleep.ms(DISCOVERY_ANNOUNCE_PERIOD);
 				
@@ -132,7 +145,15 @@ class DiscoveryImpl implements Discovery {
 						if (parts.length == 2) {
 							var serviceName = parts[0];
 							var uri = URI.create(parts[1]);
-							uris.computeIfAbsent(serviceName, (k) -> ConcurrentHashMap.newKeySet()).add( uri );
+							uris.computeIfAbsent(serviceName, (k) -> CacheBuilder.newBuilder()
+									.expireAfterWrite(DISCOVERY_ANNOUNCE_PERIOD * 2, TimeUnit.MILLISECONDS)
+									.build(new CacheLoader<URI, URI>() {
+											   @Override
+											   public URI load(URI key) throws Exception {
+												   return key;
+											   }
+										   }
+									)).put( uri , uri);
 						}
 
 					} catch (Exception x) {

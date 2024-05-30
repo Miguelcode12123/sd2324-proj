@@ -14,7 +14,9 @@ import static tukano.impl.java.clients.Clients.BlobsClients;
 import static tukano.impl.java.clients.Clients.UsersClients;
 import static utils.DB.getOne;
 
+import java.net.URI;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +33,7 @@ import tukano.api.User;
 import tukano.api.java.Blobs;
 import tukano.api.java.Result;
 import tukano.impl.api.java.ExtendedShorts;
+import tukano.impl.discovery.Discovery;
 import tukano.impl.java.servers.data.Following;
 import tukano.impl.java.servers.data.Likes;
 import utils.DB;
@@ -103,7 +106,16 @@ public class JavaShorts implements ExtendedShorts {
 		return errorOrResult( okUser(userId, password), user -> {
 			
 			var shortId = format("%s-%d", userId, counter.incrementAndGet());
-			var blobUrl = format("%s/%s/%s", getLeastLoadedBlobServerURI(), Blobs.NAME, shortId); 
+			var listOfUris = getLeastLoadedBlobServerURI();
+			// Format the blob URL using all URIs
+			StringBuilder blobUrlBuilder = new StringBuilder();
+			for (int i = 0; i < listOfUris.size(); i++) {
+				blobUrlBuilder.append(format("%s/%s/%s", listOfUris.get(i), Blobs.NAME, shortId));
+				if (i < listOfUris.size() - 1) {
+					blobUrlBuilder.append("|");
+				}
+			}
+			var blobUrl = blobUrlBuilder.toString();
 			var shrt = new Short(shortId, userId, blobUrl);
 
 			return DB.insertOne(shrt);
@@ -117,7 +129,30 @@ public class JavaShorts implements ExtendedShorts {
 		if( shortId == null )
 			return error(BAD_REQUEST);
 
+		changeUris(Discovery.getInstance().knownUrisOf(Blobs.NAME, 1), shortId);
+
 		return shortFromCache(shortId);
+	}
+
+	public void changeUris(URI[] uris , String shortId) {
+		if( uris.length > 0) {
+			StringBuilder blobUrlBuilder = new StringBuilder();
+			for( int i = 0; i < uris.length; i++) {
+				if(uris[i] != null) {
+					blobUrlBuilder.append(format("%s/%s/%s", uris[i], Blobs.NAME, shortId));
+					if (i < uris.length - 1) {
+
+						blobUrlBuilder.append("|");
+					}
+				}
+			}
+
+			if (shortFromCache(shortId).isOK()) {
+				Short s = shortFromCache(shortId).value();
+				var blobUrl = blobUrlBuilder.toString();
+				s.setBlobUrl(blobUrl);
+			}
+		}
 	}
 
 	
@@ -268,24 +303,25 @@ public class JavaShorts implements ExtendedShorts {
 		});
 	}
 	
-	private String getLeastLoadedBlobServerURI() {
+	private List<String> getLeastLoadedBlobServerURI() {
+		List<String> uris = new ArrayList<>();
 		try {
 			var servers = blobCountCache.get(BLOB_COUNT);
 			
-			var	leastLoadedServer = servers.entrySet()
+			var	leastLoadedServers = servers.entrySet()
 					.stream()
 					.sorted( (e1, e2) -> Long.compare(e1.getValue(), e2.getValue()))
-					.findFirst();
-			
-			if( leastLoadedServer.isPresent() )  {
-				var uri = leastLoadedServer.get().getKey();
-				servers.compute( uri, (k, v) -> v + 1L);				
-				return uri;
+					.collect(Collectors.toList());
+
+			for (var entry : leastLoadedServers) {
+				var uri = entry.getKey();
+				servers.compute(uri, (k, v) -> v + 1L);
+				uris.add(uri);
 			}
-		} catch( Exception x ) {
+		} catch (Exception x) {
 			x.printStackTrace();
 		}
-		return "?";
+		return uris.isEmpty() ? List.of("?") : uris;
 	}
 	
 	static record BlobServerCount(String baseURI, Long count) {};
