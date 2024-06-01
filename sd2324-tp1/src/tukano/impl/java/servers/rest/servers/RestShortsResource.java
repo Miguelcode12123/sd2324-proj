@@ -1,4 +1,4 @@
-package tukano.impl.rest.servers;
+package tukano.impl.java.servers.rest.servers;
 
 import java.util.List;
 
