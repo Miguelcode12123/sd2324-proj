@@ -1,4 +1,4 @@
-package tukano.impl.rest.servers.utils;
+package tukano.impl.java.servers.rest.servers.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,7 +55,8 @@ public class CustomLoggingFilter implements ContainerRequestFilter, ContainerRes
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Header: ").append(responseContext.getHeaders());
-		sb.append(" - Entity (JSON): ").append( Entity.entity(responseContext.getEntity(), MediaType.APPLICATION_JSON).getEntity());
+		sb.append(" - Entity (JSON): ")
+				.append(Entity.entity(responseContext.getEntity(), MediaType.APPLICATION_JSON).getEntity());
 		Log.info("HTTP RESPONSE : " + sb.toString());
 	}
 

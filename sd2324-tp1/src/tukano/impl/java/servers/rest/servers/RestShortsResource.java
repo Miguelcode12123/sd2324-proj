@@ -4,12 +4,20 @@ import java.util.List;
 
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 import tukano.api.Short;
+import tukano.api.rest.RestShorts;
 import tukano.impl.api.java.ExtendedShorts;
 import tukano.impl.api.rest.RestExtendedShorts;
 import tukano.impl.java.servers.JavaShorts;
-@Provider
+import tukano.api.java.Result;
+
 @Singleton
+@Provider
 public class RestShortsResource extends RestResource implements RestExtendedShorts {
 
 	final ExtendedShorts impl;

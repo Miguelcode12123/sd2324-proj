@@ -1,4 +1,4 @@
-package tukano.impl.rest.servers;
+package tukano.impl.java.servers.rest.servers;
 
 import java.net.URI;
 import java.util.logging.Logger;
@@ -11,7 +11,6 @@ import tukano.impl.java.servers.AbstractServer;
 import utils.IP;
 import javax.net.ssl.SSLContext;
 
-
 public abstract class AbstractRestServer extends AbstractServer {
 	private static final String SERVER_BASE_URI = "https://%s:%s%s";
 	private static final String REST_CTX = "/rest";
@@ -23,17 +22,17 @@ public abstract class AbstractRestServer extends AbstractServer {
 	protected void start() {
 		try {
 			ResourceConfig config = new ResourceConfig();
-			registerResources( config );
+			registerResources(config);
 
-			JdkHttpServerFactory.createHttpServer( URI.create(super.serverURI), config, SSLContext.getDefault());
+			JdkHttpServerFactory.createHttpServer(URI.create(super.serverURI), config, SSLContext.getDefault());
 
 			Discovery.getInstance().announce(service, super.serverURI);
 
-			Log.info(String.format("%s Server ready @ %s\n",  service, serverURI));
+			Log.info(String.format("%s Server ready @ %s\n", service, serverURI));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	abstract void registerResources( ResourceConfig config );
+
+	abstract void registerResources(ResourceConfig config);
 }

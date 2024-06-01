@@ -126,6 +126,7 @@ public class JavaBlobsDropbox implements ExtendedBlobs {
         if( ! Token.matches( token ) )
             return error(FORBIDDEN);
 
+
         var file = toFilePath(blobId);
 
         if (file == null)

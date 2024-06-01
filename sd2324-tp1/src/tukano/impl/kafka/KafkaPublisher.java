@@ -1,12 +1,12 @@
 package tukano.impl.kafka;
 
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
-
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 public class KafkaPublisher {
 
@@ -24,10 +24,10 @@ public class KafkaPublisher {
 
 		return new KafkaPublisher(new KafkaProducer<String, String>(props));
 	}
-	
+
 	private final KafkaProducer<String, String> producer;
 
-	private KafkaPublisher( KafkaProducer<String, String> producer) {
+	private KafkaPublisher(KafkaProducer<String, String> producer) {
 		this.producer = producer;
 	}
 
@@ -44,7 +44,7 @@ public class KafkaPublisher {
 		}
 		return -1;
 	}
-	
+
 	public long publish(String topic, String value) {
 		try {
 			long offset = producer.send(new ProducerRecord<>(topic, value)).get().offset();
@@ -53,5 +53,9 @@ public class KafkaPublisher {
 			x.printStackTrace();
 		}
 		return -1;
+	}
+
+	public static void main(String[] args) throws Exception {
+
 	}
 }
