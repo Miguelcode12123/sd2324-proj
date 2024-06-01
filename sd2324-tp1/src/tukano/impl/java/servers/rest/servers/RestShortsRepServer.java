@@ -10,7 +10,7 @@ import tukano.impl.java.servers.rest.servers.utils.GenericExceptionMapper;
 import utils.Args;
 
 public class RestShortsRepServer extends AbstractRestServer {
-    public static final int PORT = 4567;
+    public static final int PORT = 9090;
 
     private static Logger Log = Logger.getLogger(RestShortsRepServer.class.getName());
 

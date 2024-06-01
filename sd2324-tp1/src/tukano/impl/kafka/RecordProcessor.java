@@ -1,4 +1,4 @@
-package sd2223.trab2.kafka;
+package tukano.impl.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 

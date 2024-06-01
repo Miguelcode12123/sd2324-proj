@@ -19,9 +19,12 @@ COPY target/*jar-with-dependencies.jar sd2324.jar
 
 # docker pull smduarte/sd2324-kafka
 
+# docker build -t sd2324-tp2-xxxxx-yyyyy:latest .
+
 # mvn clean compile assembly:single docker:build
 
-# docker build -t sd2324-tp2-xxxxx-yyyyy:latest .
+# mvn clean compile assembly:single
+
 
 ############################################################# TESTER ################################################################################
 # sh test-sd-tp2.sh -image sd2324-tp2-xxxxx-yyyyy
